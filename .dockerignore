@@ -1,0 +1,15 @@
+**/.git
+**/.DS_Store
+**/node_modules
+*.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+.vscode
+
+# Node Files #
+node_modules
+npm-debug.log
+npm-debug.log.*

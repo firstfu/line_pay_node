@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>結帳頁面</title>
+  </head>
+  <body>
+    <div class="app">
+      <div class="title">{{ title }}</div>
+      <div class="title">交易序號: {{ transactionId }}</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
+      integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      var app = new Vue({
+        el: '.app',
+        data: {
+          title: 'linePay結帳成功',
+          transactionId: '<%= transactionId %>',
+        },
+        methods: {},
+      });
+    </script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .title {
+        margin-top: 24px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .form {
+        display: flex;
+        justify-content: center;
+      }
+      .paymentsRequest {
+        margin-top: 50px;
+        font-size: 18px;
+        padding: 10px 30px;
+        border-radius: 10px;
+        color: black;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 10px;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+    container_name: api
+    ports:
+      - 3001:3001
+      - 9229:9229
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_ROOT_PASSWORD=line_pay_node99817
+      - MARIADB_DATABASE=line_pay_node
+      - LINEPAY_VERSION=v3
+      # 正式環境
+      - X_LINE_ChannelId=
+      - X_LINE_ChannelSecret=
+      - LINE_API_URL=https://api-pay.line.me
+      - LINE_CONFIRM_URL=http://192.168.23.126:3000/linepay/shop/confirm
+      - LINE_CANCEL_URL=http://192.168.23.126:3000/linepay/shop/cancel
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: bash -c "npm run start:prod"
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+      - '--default-authentication-plugin=mysql_native_password'
+      - '--event_scheduler=ON'
+    ports:
+      - 3346:3306
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/backup:/backup
+    environment:
+      MYSQL_ROOT_PASSWORD: line_pay_node99817

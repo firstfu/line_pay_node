@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
+}
+
+enum CURRENCY {
+    // 新台幣
+    TWD
+}
+
+enum PaymentMethod {
+    // LINE PAY
+    LINE_PAY
+}
+
+enum TRANSACTION_STATUS {
+    // 等待付款
+    PENDING
+    // 付款失敗
+    FAILED
+    // 付款成功
+    SUCCESS
+    // 付款取消
+    CANCEL
+}
+
+model Order {
+    id                Int                @id @default(autoincrement())
+    // 訂單編號
+    orderNo           String             @unique
+    // 訂單金額
+    amount            Int                @default(0)
+    // 貨幣（ISO 4217
+    currency          CURRENCY
+    // 訂單明細
+    orderDetails      OrderDetail[]
+    // 支付方式
+    payment           PaymentMethod      @default(LINE_PAY)
+    // 交易編號id
+    transactionId     String?            @unique
+    // 交易狀態
+    transactionStatus TRANSACTION_STATUS @default(PENDING)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([orderNo, transactionId])
+}
+
+model OrderDetail {
+    id          Int    @id @default(autoincrement())
+    productName String
+    // 購買數量
+    quantity    Int    @default(0)
+    // 購買價格
+    price       Int    @default(0)
+    // 訂單id
+    Order       Order? @relation(fields: [orderId], references: [id])
+    orderId     Int?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([orderId])
+}

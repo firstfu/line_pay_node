@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <title>結帳頁面</title>
+  </head>
+  <body>
+    <div class="app">
+      <div class="title">{{ title }}</div>
+      <form action="" class="form">
+        <input
+          type="submit"
+          value="LinePay結帳"
+          class="paymentsRequest"
+          @click.prevent="paymentsRequest"
+        />
+      </form>
+
+      <div class="loading" v-if="showLoading">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="sr-only">處理中...</span>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"
+      integrity="sha512-m9S8W3a9hhBHPFAbEIaG7J9P92dzcAWwM42VvJp5n1/M599ldK6Z2st2SfJGsX0QR4LfCVr681vyU5vW8d218w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+      var app = new Vue({
+        el: '.app',
+        data: {
+          title: 'linePay購物頁',
+          showLoading: false,
+        },
+        methods: {
+          // linePay: 建立付款請求
+          async paymentsRequest() {
+            let data = [
+              {
+                productName: '商品1',
+                currency: 'TWD',
+                amount: 1,
+                price: 20,
+              },
+              {
+                productName: '商品2',
+                currency: 'TWD',
+                amount: 2,
+                price: 12,
+              },
+              {
+                productName: '商品3',
+                currency: 'TWD',
+                amount: 4,
+                price: 18,
+              },
+            ];
+
+            try {
+              this.showLoading = true;
+              let resData = await axios.post('/linePay/payments/request', data);
+              resData = resData?.data;
+              console.log('resData:', resData);
+
+              if (resData?.data?.returnCode === '0000') {
+                alert('結帳處理中');
+                setTimeout(() => {
+                  window.location.href = resData?.data?.info?.paymentUrl.web;
+                }, 500);
+              }
+            } catch (error) {
+              console.log(
+                '🚀 ~ file: index.ejs:45 ~ paymentsRequest ~ error:',
+                error,
+              );
+            } finally {
+              this.showLoading = false;
+            }
+          },
+        },
+      });
+    </script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      .title {
+        margin-top: 24px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .form {
+        display: flex;
+        justify-content: center;
+      }
+      .paymentsRequest {
+        margin-top: 50px;
+        font-size: 18px;
+        padding: 10px 30px;
+        border-radius: 10px;
+        color: black;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 10px;
+      }
+      .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+      }
+    </style>
+  </body>
+</html>
